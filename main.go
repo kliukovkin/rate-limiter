@@ -2,7 +2,7 @@ package main
 
 import (
 	"net/http"
-	"rate-limiter/tokenBucket"
+	"rate-limiter/fixedWindow"
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
@@ -11,7 +11,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	mux := http.NewServeMux()
-	mux.Handle("/", tokenBucket.rateLimit(http.HandlerFunc(handler)))
+	mux.Handle("/", fixedWindow.Middleware(http.HandlerFunc(handler)))
 	server := http.Server{
 		Addr:    ":8080",
 		Handler: mux,

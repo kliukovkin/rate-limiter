@@ -1,4 +1,4 @@
-package tokenBucket
+package fixedWindow
 
 import (
 	"github.com/go-redis/redis/v9"
@@ -11,7 +11,7 @@ func Middleware(next http.Handler) http.Handler {
 	})
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		userID := r.Header.Get("UserID")
-		if !RateLimitUsingTokenBucket(userID, 2, 5, redisClient) {
+		if !RateLimitUsingFixedWindow(userID, 2, 5, redisClient) {
 			w.WriteHeader(http.StatusTooManyRequests)
 			return
 		}
